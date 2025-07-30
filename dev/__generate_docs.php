@@ -34,7 +34,6 @@ foreach ($ini as $key => $value) {
 spl_autoload_register(function ($class) {
     $className = substr($class, 22);
     $file = __DIR__ . "/../src/" . $className . ".php";
-    var_dump($file);
     if (file_exists($file)) {
         require_once $file;
         return true;
@@ -207,7 +206,7 @@ echo '<!DOCTYPE html>';
             }
             $code = highlight_string("<?php\n" . trim(implode("\n", $code), "\n\r {}"), true);
 
-            $output = $method->invoke(null)->toSvg(['id' => "php-charts-" . $file]);
+            $output = call_user_func(Examples::$code)->toSvg(['id' => "php-charts-" . $file]);
             $output = trim($output);
             $mpdf = new Mpdf();
             $mpdf->WriteHTML(
