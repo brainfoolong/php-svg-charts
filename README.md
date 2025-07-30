@@ -20,4 +20,4 @@ composer require brainfoolong/svg-charts
 
 ### Usage / Documentation
 
-Just head to 
+Just head to https://brainfoolong.github.io/php-svg-charts/
