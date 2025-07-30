@@ -25,3 +25,11 @@ jobs:
 
       - name: Run tests
         run: cd tests && php tests.php
+
+      - name: Upload docker logs to GitHub
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-logs
+          path: ./docs
+          retention-days: 5
