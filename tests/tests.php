@@ -18,6 +18,8 @@ foreach ($outputData as $file => $data) {
         unset($existingFiles[$file]);
     }
     $originalData = file_get_contents(__DIR__ . "/../docs/$file", $data);
+    $originalData = str_replace("\r", "", $originalData);
+    $data = str_replace("\r", "", $data);
     if ($originalData !== $data) {
         $errors[] = $file . " not generate not the same expected contents as stored in the repository";
     }

@@ -21,15 +21,15 @@ jobs:
           tools: composer
 
       - name: Install composer libs
-        run: composer update
+        run: cd dev && composer update
 
       - name: Run tests
         run: cd tests && php tests.php
 
-      - name: Upload docker logs to GitHub
+      - name: Upload generated docs artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: docker-logs
+          name: docs
           path: ./docs
           retention-days: 5

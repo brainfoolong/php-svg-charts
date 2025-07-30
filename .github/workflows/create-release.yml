@@ -19,7 +19,7 @@ jobs:
           tools: composer
 
       - name: Install composer libs
-        run: composer update
+        run: cd dev && composer update
 
       - name: Run tests
         run: cd tests && php tests.php
