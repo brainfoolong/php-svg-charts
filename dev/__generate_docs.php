@@ -66,7 +66,6 @@ echo '<!DOCTYPE html>';
     <head>
         <meta charset="UTF-8">
         <title>PHP SVG Charts - Documentation</title>
-        <script><?= file_get_contents(__DIR__ . "/../js/php-svg-charts.js") ?></script>
         <style>
             :root {
                 --gradientBorder-gradient: linear-gradient(180deg, #93335b00, #93335bbd, #93335b17), linear-gradient(15deg, #93335b1f 50%, #93335bbd);
@@ -254,12 +253,6 @@ echo '<!DOCTYPE html>';
     <div class="tooltip">
 
     </div>
-    <script>
-        (() => {
-            const svgElements = document.querySelectorAll('.svg svg')
-        })()
-        PhpSvgCharts.bindPointerEvents(document.querySelectorAll('.svg svg'))
-    </script>
     </body>
     </html>
 <?php
