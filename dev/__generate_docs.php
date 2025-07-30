@@ -33,7 +33,8 @@ foreach ($ini as $key => $value) {
 }
 
 spl_autoload_register(function ($class) {
-    $className = substr($class, 22);
+    $class = str_replace("\\", "/", $class);
+    $className = trim(substr($class, 22), "\\/");
     $file = __DIR__ . "/../src/" . $className . ".php";
     if (file_exists($file)) {
         require_once $file;
