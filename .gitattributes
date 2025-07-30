@@ -6,6 +6,7 @@
 *.txt text eol=lf
 *.php text eol=lf
 *.min.js binary
+*.pdf binary
 vendor/* binary
 
 .github export-ignore
