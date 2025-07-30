@@ -1,4 +1,4 @@
-# PHP SVG Charts
+# PHP SVG Charts (Beta)
 > Generate SVG image charts in PHP with ease.
 
 ![Examples](docs/images/examples.webp)
