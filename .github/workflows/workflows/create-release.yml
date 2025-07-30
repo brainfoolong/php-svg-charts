@@ -1,0 +1,27 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Install php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Run tests
+        run: cd tests && php tests.php
+
+      - name: Draft release
+        uses: softprops/action-gh-release@v2
+        with:
+          token:  ${{ secrets.TOKEN }}
+          draft: true
