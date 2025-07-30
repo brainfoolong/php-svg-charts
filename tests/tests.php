@@ -3,22 +3,28 @@
 $outputData = [];
 require __DIR__ . '/../dev/__generate_docs.php';
 
-$existingFiles = ["index.html" => "index.html"];
-$pdfs = scandir(__DIR__ . "/../docs/pdfs");
-foreach ($pdfs as $pdf) {
-    if (str_ends_with($pdf, ".pdf")) {
-        $existingFiles["pdfs/$pdf"] = "pdfs/$pdf";
+$existingFiles = [];
+$svgs = scandir(__DIR__ . "/../docs/svgs");
+foreach ($svgs as $pdf) {
+    if (str_ends_with($pdf, ".svg")) {
+        $existingFiles["svgs/$pdf"] = "svgs/$pdf";
     }
 }
 $errors = [];
+unset($outputData['index.html']);
 foreach ($outputData as $file => $data) {
+    if (!str_ends_with($file, ".svg")) {
+        continue;
+    }
     file_put_contents(__DIR__ . "/generated/$file", $data);
     if (!isset($existingFiles[$file])) {
         $errors[] = $file . " is being generated but not exist in expected stored files";
     } else {
         unset($existingFiles[$file]);
     }
-    $originalData = file_get_contents(__DIR__ . "/../docs/$file", $data);
+    $originalData = file_get_contents(__DIR__ . "/../docs/$file");
+    $originalData = str_replace(["\r", "\n", " "], "", $originalData);
+    $data = str_replace(["\r", "\n", " "], "", $data);
     if ($originalData !== $data) {
         $errors[] = $file . " not generate not the same expected contents as stored in the repository";
     }

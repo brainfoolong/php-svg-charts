@@ -5,6 +5,7 @@ use Mpdf\Output\Destination;
 
 ini_set("error_reporting", E_ALL);
 ini_set("display_errors", 1);
+ini_set("date.timezone", "UTC");
 
 $files = [
     'line-chart-basic',
@@ -182,6 +183,7 @@ echo '<!DOCTYPE html>';
         <?php
         $examples = [];
         $pdfs = [];
+        $svgs = [];
 
         foreach ($files as $file) {
             if (isset($_GET['single']) && $_GET['single'] !== $file) {
@@ -219,6 +221,7 @@ echo '<!DOCTYPE html>';
             $pdfOut = preg_replace("~^(/CreationDate|/ModDate) .*~m", "$1 (D:20250729134318+02'00')", $pdfOut);
             $pdfOut = preg_replace("~^(/ID) .*~m", "/ID [<phpsvgcharts><phpsvgcharts>]", $pdfOut);
             $pdfs[$file] = $pdfOut;
+            $svgs[$file] = $output;
 
             $examples[$file] = [
                 'title' => Examples::$title,
@@ -264,6 +267,9 @@ $outputData = [];
 $outputData['index.html'] = $html;
 foreach ($pdfs as $file => $data) {
     $outputData["pdfs/" . $file . ".pdf"] = $data;
+}
+foreach ($svgs as $file => $data) {
+    $outputData["svgs/" . $file . ".svg"] = $data;
 }
 if (PHP_SAPI !== 'cli') {
     echo $html;

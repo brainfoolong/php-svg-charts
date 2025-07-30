@@ -4,6 +4,7 @@
 *.ts text eol=lf
 *.html text eol=lf
 *.txt text eol=lf
+*.svg text eol=lf
 *.php text eol=lf
 *.min.js binary
 *.pdf binary
