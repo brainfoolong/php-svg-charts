@@ -39,6 +39,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: testresults
+          name: ${{ matrix.php-versions }}_testresults
           path: ./tests/generated
           retention-days: 5
