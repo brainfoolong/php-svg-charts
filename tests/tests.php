@@ -12,14 +12,13 @@ foreach ($pdfs as $pdf) {
 }
 $errors = [];
 foreach ($outputData as $file => $data) {
+    file_put_contents(__DIR__ . "/generated/$file", $data);
     if (!isset($existingFiles[$file])) {
         $errors[] = $file . " is being generated but not exist in expected stored files";
     } else {
         unset($existingFiles[$file]);
     }
     $originalData = file_get_contents(__DIR__ . "/../docs/$file", $data);
-    $originalData = str_replace("\r", "", $originalData);
-    $data = str_replace("\r", "", $data);
     if ($originalData !== $data) {
         $errors[] = $file . " not generate not the same expected contents as stored in the repository";
     }

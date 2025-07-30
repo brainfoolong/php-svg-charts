@@ -34,10 +34,12 @@ foreach ($ini as $key => $value) {
 spl_autoload_register(function ($class) {
     $className = substr($class, 22);
     $file = __DIR__ . "/../src/" . $className . ".php";
+    var_dump($file);
     if (file_exists($file)) {
         require_once $file;
+        return true;
     }
-    return true;
+    return false;
 });
 
 register_shutdown_function(function () {

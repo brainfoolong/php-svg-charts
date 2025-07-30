@@ -30,6 +30,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: docs
-          path: ./docs
+          name: testresults
+          path: ./tests/generated
           retention-days: 5
