@@ -1,0 +1,36 @@
+{
+  "name": "brainfoolong/svg-charts",
+  "type": "library",
+  "description": "Generate SVG image charts to be able to use it in web and pdf at the same time.",
+  "keywords": [
+    "svg",
+    "svg-charts",
+    "php",
+    "web",
+    "pdf"
+  ],
+  "homepage": "https://github.com/brainfoolong/php-svg-charts",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Roland Eigelsreiter",
+      "homepage": "https://github.com/brainfoolong/php-svg-charts",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "BrainFooLong\\SvgCharts\\": "src"
+    }
+  },
+  "version": "0.1.0",
+  "require": {
+    "php": ">=8.1.0",
+    "ext-json": "*",
+    "ext-mbstring": "*"
+  },
+  "require-dev": {
+    "mpdf/mpdf": "^8.2",
+    "ext-gd": "*"
+  }
+}

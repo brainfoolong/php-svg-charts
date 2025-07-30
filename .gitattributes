@@ -1,0 +1,14 @@
+*.js text eol=lf
+*.sh text eol=lf
+*.json text eol=lf
+*.ts text eol=lf
+*.html text eol=lf
+*.txt text eol=lf
+*.php text eol=lf
+*.min.js binary
+vendor/* binary
+
+.github export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+tests export-ignore

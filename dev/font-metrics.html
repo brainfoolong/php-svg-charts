@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get font metrics for PHP SVG Charts</title>
+    <style>
+      body {
+        font-family: monospace;
+        background: #0d0d17;
+        color: white;
+      }
+      .svg {
+        white-space: pre;
+      }
+    </style>
+</head>
+<body>
+<div class="svg"></div>
+<script>
+  (async () => {
+    const wait = async (ms) => {
+      return new Promise(resolve => {
+        setTimeout(resolve, ms)
+      })
+    }
+
+    function ucfirst (str) {
+      return str.substring(0, 1).toUpperCase() + str.toLowerCase().substring(1, str.length)
+    }
+
+    let allChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!"§$%&/()=?´`*+~#\'-_.:,;<>|^°²³{[]}\\€@µ '
+    let chars = allChars.split('')
+    const fonts = ['arial', 'verdana', 'tahoma', 'trebuchet ms', 'times new roman', 'georgia', 'garamond', 'courier new']
+    const weights = ['normal', 'bold']
+    for (const font of fonts) {
+      for (const weight of weights) {
+
+        let arr = {}
+        let svg = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">'
+        for (let char of chars) {
+          if (char === ' ') {
+            char = '&nbsp;'
+          }
+          svg += '<text x="10" y="10" font-family="' + font + '" font-size="14" font-weight="' + weight + '">' + char + '</text>'
+        }
+        svg += '</svg>'
+        const svgEl = document.querySelector('.svg')
+        svgEl.innerHTML = svg
+        await wait(100)
+        let i = 0
+        let lineHeight = 0
+        for (const char of chars) {
+          const box = svgEl.childNodes[0].childNodes[i].getBoundingClientRect()
+          arr[char] = box.width
+          if (char === 'd') {
+            lineHeight = box.height
+          }
+          i++
+        }
+        arr['lineHeight'] = lineHeight - 1
+        delete arr['ls']
+
+
+        let fontName = font.toLowerCase()
+        const fontNameSpl = fontName.split(" ")
+        fontName = fontNameSpl.map(ucfirst).join('')
+        let className = 'FontMetric' + fontName + ucfirst(weight)
+        let out = '<\?php\n\nnamespace BrainFooLong\\SvgCharts\\FontMetrics;\n\n// generated with dev/font-metrics.html, do not edit manually\nclass '
+        out += className + '\n{\n\n    public static array \$data = [\n'
+        for (let char in arr) {
+          out += '        "' + char.replace(/\\/, '\\\\').replace(/"/, '\\"') + '" => ' + arr[char] + ',\n'
+        }
+        out += '];\n\n}'
+
+        fetch('/save', {
+          method: 'post',
+          body: JSON.stringify({ 'className': className, 'contents': out }),
+        })
+      }
+    }
+  })()
+</script>
+</body>
+</html>
