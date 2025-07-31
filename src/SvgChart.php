@@ -3,6 +3,7 @@
 namespace BrainFooLong\SvgCharts;
 
 use BrainFooLong\SvgCharts\ChartsType\LinesAndColumns;
+use BrainFooLong\SvgCharts\Renderer\Circle;
 use BrainFooLong\SvgCharts\Renderer\Grid;
 use BrainFooLong\SvgCharts\Renderer\Rect;
 use BrainFooLong\SvgCharts\Renderer\RenderGroup;
@@ -61,6 +62,13 @@ class SvgChart
         $renderGroup = new RenderGroup('background', [$renderer]);
         $this->renderPipeline->renderers[] = $renderGroup;
         $this->background = $renderer;
+    }
+
+    public function createDebugPoint(float $x, float $y, string $color = "red", float $r = 5, string $debugInfo = ''): Circle
+    {
+        $circle = new Circle($x, $y, $r, new DrawSettings($color));
+        $circle->additionalAttributes['data-debug-info'] = $debugInfo;
+        return $circle;
     }
 
     /**
