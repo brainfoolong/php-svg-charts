@@ -27,7 +27,7 @@ Examples::$code = function (): SvgChart {
     $chart->xAxis->labelFormatter = LabelFormats::date("d.m.Y H:i");
     $yAxis = new YAxis(
         'data',
-        'BEST',
+        '',
         LabelFormats::numberFormat(2),
         drawSettingsTitle: new DrawSettings(fontWeight: 'bold'),
     );
@@ -57,7 +57,7 @@ Examples::$code = function (): SvgChart {
 
     $yAxis = new YAxis('data2', 'BEST', LabelFormats::numberFormat(2));
     $yAxis->titleDefaults = new TextRect();
-    $yAxis->position = 'right';
+    $yAxis->position = $yAxis::LABEL_POSITION_RIGHT;
     $background = $yAxis->titleDefaults->setBackground(5, 'blue', 5);
     $background->drawSettings->fillOpacity = 0.4;
     $valueLabelDrawSettings = new TextRect(

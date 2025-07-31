@@ -13,6 +13,9 @@ use BrainFooLong\SvgCharts\SvgChart;
 class YAxis extends Renderer
 {
 
+    public const LABEL_POSITION_LEFT = 'left';
+    public const LABEL_POSITION_RIGHT = 'right';
+
     public LinesAndColumns $series;
     public PlotArea $availablePlotArea;
     public array $annotations = [];
@@ -34,15 +37,12 @@ class YAxis extends Renderer
          * @var float|string|null
          */
         public float|string|null $maxValue = null,
-        /**
-         * Values: left, right
-         * @var string
-         */
-        public string $position = 'left',
+        public string $position = self::LABEL_POSITION_LEFT,
         public ?DrawSettings $drawSettingsValues = null,
         public ?DrawSettings $drawSettingsTitle = null,
         public ?TextRect $titleDefaults = null,
         public ?TextRect $labelDefaults = null,
+        public float $margin = 10
     ) {}
 
     /**
@@ -96,15 +96,6 @@ class YAxis extends Renderer
         return $arr;
     }
 
-    public function getLegendWidth(SvgChart $chart): float
-    {
-        $axisClone = clone $this;
-        $axisClone->availablePlotArea = clone $axisClone->availablePlotArea;
-        $old = $axisClone->availablePlotArea->getWidth();
-        $axisClone->toSvg($chart);
-        return $old - $axisClone->availablePlotArea->getWidth();
-    }
-
     public function addLineAnnotation(
         float $y,
         Line $line,
@@ -144,11 +135,9 @@ class YAxis extends Renderer
         $titleRectDefault->textAlignment = $titleRectDefault::TEXT_ALIGN_CENTER;
 
         $labelRectDefault = $this->labelDefaults ? clone $this->labelDefaults : new TextRect();
-        $labelRectDefault->anchorHorizontal = $this->position === 'left' ? $labelRectDefault::ANCHOR_HORIZONTAL_RIGHT : $labelRectDefault::ANCHOR_HORIZONTAL_LEFT;
+        $labelRectDefault->anchorHorizontal = $this->position === self::LABEL_POSITION_LEFT ? $labelRectDefault::ANCHOR_HORIZONTAL_RIGHT : $labelRectDefault::ANCHOR_HORIZONTAL_LEFT;
         $labelRectDefault->anchorVertical = $labelRectDefault::ANCHOR_VERTICAL_MIDDLE;
         $labelRectDefault->textAlignment = $labelRectDefault->anchorHorizontal;
-
-        $titleContentSize = $titleRectDefault->getMetaInformation($chart, $this->label);
 
         $lineSpacing = $plotArea->getHeight() / $this->verticalLabels;
         $minMax = $this->series->getMinMaxCoordinates($this->id);
@@ -162,22 +151,21 @@ class YAxis extends Renderer
         $outputs = [];
         $labels = [];
         $maxWidth = 0;
-        $padding = 10;
+        $margin = $this->margin;
         for ($i = 0; $i <= $this->verticalLabels; $i++) {
             $value = $minValue + ($valueStep * $i);
             $labelText = LabelFormats::valueToFormat($value, $this->labelFormatter);
             $labels[$i] = ["label" => $labelText];
-            $labels[$i]['size'] = $labelRectDefault->getMetaInformation($chart, $labelText);
-            $labels[$i]['rectWidth'] = (float)$labels[$i]['size']['width'] + $padding;
-            if ($maxWidth < $labels[$i]['rectWidth']) {
-                $maxWidth = $labels[$i]['rectWidth'];
+            $width = $labelRectDefault->getMetaInformation($chart, $labelText)['width'];
+            if ($maxWidth < $width) {
+                $maxWidth = $width;
             }
         }
-        $xKey = $this->position === 'left' ? 'x1' : 'x2';
-        $xMulti = $this->position === 'left' ? 1 : -1;
-        $plotArea->reduceWidth($maxWidth + $padding, $this->position);
+        $xKey = $this->position === self::LABEL_POSITION_LEFT ? 'x1' : 'x2';
+        $xMulti = $this->position === self::LABEL_POSITION_LEFT ? 1 : -1;
+        $plotArea->reduceWidth($maxWidth, $this->position);
         foreach ($labels as $i => $row) {
-            $labelX = $plotArea->{$xKey} + ($padding * $xMulti);
+            $labelX = $plotArea->{$xKey} + ($margin * $xMulti);
             $labelY = $plotArea->y1 + $plotArea->getHeight() - ($i * $lineSpacing);
             $renderer = clone $labelRectDefault;
             $renderer->text = $row['label'];
@@ -185,18 +173,19 @@ class YAxis extends Renderer
             $renderer->y = $labelY;
             $outputs[] = $renderer->toSvg($chart);
         }
+        $plotArea->reduceWidth($margin, $this->position);
 
-        if ($this->label) {
+        if ($this->label !== '') {
             $titleY = ($plotArea->getHeight() / 2) + $chart->topMargin;
-            $titleX = $plotArea->{$xKey} - ($maxWidth * $xMulti);
-            $plotArea->reduceWidth($titleContentSize['width'] + $padding, $this->position);
+            $titleX = $plotArea->{$xKey} - (($maxWidth + $margin) * $xMulti);
+            $plotArea->reduceWidth(($titleRectDefault->getTotalHeight($chart) / 2), $this->position);
             $renderer = clone $titleRectDefault;
             $renderer->text = $this->label;
             $renderer->x = $titleX;
             $renderer->y = $titleY;
             $outputs[] = $renderer->toSvg($chart);
         }
-        $this->availablePlotArea = $plotArea;
+        $plotArea->reduceWidth($margin, $this->position);
         return (new RenderGroup('yaxis', $outputs))->toSvg($chart);
     }
 

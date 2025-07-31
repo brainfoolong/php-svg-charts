@@ -269,7 +269,8 @@ class LinesAndColumns extends Renderer
                 $yAxis->verticalLabels = $chart->grid->lines ?? 5;
             }
             $yAxis->availablePlotArea = $finalPlotArea;
-            $finalPlotArea->reduceWidth($yAxis->getLegendWidth($chart), $yAxis->position);
+            // simulate rendering to update $finalPlotArea
+            $yAxis->toSvg($chart);
         }
 
         $xAxisHeight = $finalPlotArea->getHeight();

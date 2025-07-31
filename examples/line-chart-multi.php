@@ -110,7 +110,7 @@ Examples::$code = function (): SvgChart {
     // second yaxis
     $yAxis = new YAxis('data2', 'BEST', LabelFormats::numberFormat(2));
     $yAxis->titleDefaults = new TextRect();
-    $yAxis->position = 'right';
+    $yAxis->position = $yAxis::LABEL_POSITION_RIGHT;
     $background = $yAxis->titleDefaults->setBackground();
     $background->borderRadius = 5;
     $background->drawSettings = new DrawSettings('blue', fillOpacity: 0.4);

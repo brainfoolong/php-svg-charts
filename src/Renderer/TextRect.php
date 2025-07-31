@@ -35,7 +35,7 @@ class TextRect extends Renderer
         public ?float $rotate = null,
         public ?DrawSettings $drawSettings = null,
         public float $anchorVerticalOffset = 0,
-        public float $anchorHorizontalOffset = 0,
+        public float $anchorHorizontalOffset = 0
     ) {
         $this->id = "textrect";
     }
@@ -159,7 +159,7 @@ class TextRect extends Renderer
         }
 
         // debug helper
-        //                $outputs[] = '<circle r="5" cx="' . $this->x . '" cy="' . $this->y . '" fill="blue"></circle>';
+//        $outputs[] = $chart->createDebugPoint($this->x, $this->y, debugInfo: $this->text);
         $group = new RenderGroup('textrect', $outputs);
         if ($this->rotate) {
             $group->transforms['rotate'] = $this->rotate . ', ' . $centerX . ', ' . $centerY;
