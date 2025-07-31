@@ -115,6 +115,7 @@ class SvgChart
 
     public function toSvg(?array $customSvgTagAttributes = null): string
     {
+        $original = unserialize(serialize($this));;
         $viewBox = "0 0 $this->width $this->height";
         $customSvgTagAttributes['xmlns'] = 'http://www.w3.org/2000/svg';
         if (!isset($customSvgTagAttributes['id'])) {
@@ -124,7 +125,6 @@ class SvgChart
         $customSvgTagAttributes['height'] = $this->height;
         $customSvgTagAttributes['viewBox'] = $viewBox;
         $customSvgTagAttributes['class'] = trim(($customSvgTagAttributes['class'] ?? '') . " php-svg-charts");
-        $original = clone $this;
         $svg = '<svg ' . Renderer::getAttributesString($customSvgTagAttributes, false) . '>';
         if ($this->svgDefs) {
             $svg .= '<defs>' . $this->svgDefs . '</defs>';
