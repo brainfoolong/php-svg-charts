@@ -65,6 +65,7 @@ class TextRect extends Renderer
     public function getMetaInformation(SvgChart $chart, ?string $text = null, ?float $rotate = null): array
     {
         $text = $text ?? $this->text;
+        $text = strip_tags($text);
         $rotate = $rotate ?? $this->rotate ?? 0;
         $cacheKey = $text . "_" . number_format($rotate, 2);
         if (isset($this->metaCache[$cacheKey])) {

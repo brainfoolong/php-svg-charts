@@ -257,6 +257,10 @@ class LinesAndColumns extends Renderer
             $renderGroupDataLabels
         ];
 
+        if ($legend = $chart->legend) {
+            $legend->prepareDrawing($chart);
+        }
+
         $startPlotArea = $chart->getPlotArea();
         $finalPlotArea = $chart->getPlotArea();
 

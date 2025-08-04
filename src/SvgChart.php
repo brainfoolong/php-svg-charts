@@ -5,6 +5,7 @@ namespace BrainFooLong\SvgCharts;
 use BrainFooLong\SvgCharts\ChartsType\LinesAndColumns;
 use BrainFooLong\SvgCharts\Renderer\Circle;
 use BrainFooLong\SvgCharts\Renderer\Grid;
+use BrainFooLong\SvgCharts\Renderer\Legend;
 use BrainFooLong\SvgCharts\Renderer\Rect;
 use BrainFooLong\SvgCharts\Renderer\RenderGroup;
 
@@ -15,6 +16,7 @@ class SvgChart
     public RenderPipeline $renderPipelineAnnotations;
     public Rect $background;
     public Grid $grid;
+    public ?Legend $legend = null;
     public LinesAndColumns $chartType;
 
     /**
@@ -100,6 +102,14 @@ class SvgChart
         return $renderer;
     }
 
+    public function createLegend(): Legend
+    {
+        $renderer = new Legend();
+        $this->renderPipeline->renderers[] = $renderer;
+        $this->legend = $renderer;
+        return $renderer;
+    }
+
     public function createLineAndColumnChart(): LinesAndColumns
     {
         $renderer = new LinesAndColumns("lianco");
@@ -124,6 +134,10 @@ class SvgChart
     public function toSvg(?array $customSvgTagAttributes = null): string
     {
         $original = unserialize(serialize($this));;
+
+        $renderings = $this->renderPipeline->toSvg($this);
+        $renderings .= $this->renderPipelineAnnotations->toSvg($this);
+
         $viewBox = "0 0 $this->width $this->height";
         $customSvgTagAttributes['xmlns'] = 'http://www.w3.org/2000/svg';
         if (!isset($customSvgTagAttributes['id'])) {
@@ -133,12 +147,12 @@ class SvgChart
         $customSvgTagAttributes['height'] = $this->height;
         $customSvgTagAttributes['viewBox'] = $viewBox;
         $customSvgTagAttributes['class'] = trim(($customSvgTagAttributes['class'] ?? '') . " php-svg-charts");
+
         $svg = '<svg ' . Renderer::getAttributesString($customSvgTagAttributes, false) . '>';
         if ($this->svgDefs) {
             $svg .= '<defs>' . $this->svgDefs . '</defs>';
         }
-        $svg .= $this->renderPipeline->toSvg($this);
-        $svg .= $this->renderPipelineAnnotations->toSvg($this);
+        $svg .= $renderings;
         $svg .= '</svg>';
         // rendering can modify charts, so make sure to reset to original
         foreach ($original as $key => $value) {
