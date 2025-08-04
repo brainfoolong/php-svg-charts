@@ -22,7 +22,7 @@ class YAxis extends Renderer
 
     public function __construct(
         public string $id,
-        public string $label,
+        public string $title,
         public ?string $labelFormatter = null,
         public ?int $verticalLabels = null,
         /**
@@ -175,12 +175,12 @@ class YAxis extends Renderer
         }
         $plotArea->reduceWidth($margin, $this->position);
 
-        if ($this->label !== '') {
+        if ($this->title !== '') {
             $titleY = ($plotArea->getHeight() / 2) + $chart->topMargin;
             $titleX = $plotArea->{$xKey} - (($maxWidth + $margin) * $xMulti);
             $plotArea->reduceWidth(($titleRectDefault->getTotalHeight($chart) / 2), $this->position);
             $renderer = clone $titleRectDefault;
-            $renderer->text = $this->label;
+            $renderer->text = $this->title;
             $renderer->x = $titleX;
             $renderer->y = $titleY;
             $outputs[] = $renderer->toSvg($chart);
