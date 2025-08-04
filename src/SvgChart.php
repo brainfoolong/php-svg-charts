@@ -3,6 +3,7 @@
 namespace BrainFooLong\SvgCharts;
 
 use BrainFooLong\SvgCharts\ChartsType\LinesAndColumns;
+use BrainFooLong\SvgCharts\ChartsType\Pie;
 use BrainFooLong\SvgCharts\Renderer\Circle;
 use BrainFooLong\SvgCharts\Renderer\Grid;
 use BrainFooLong\SvgCharts\Renderer\Legend;
@@ -17,7 +18,7 @@ class SvgChart
     public Rect $background;
     public Grid $grid;
     public ?Legend $legend = null;
-    public LinesAndColumns $chartType;
+    public LinesAndColumns|Pie $chartType;
 
     /**
      * Svg <defs> data, so you are able to reuse them in the svg
@@ -118,6 +119,14 @@ class SvgChart
         return $renderer;
     }
 
+    public function createPieChart(): Pie
+    {
+        $renderer = new Pie("pie");
+        $this->renderPipeline->renderers[] = $renderer;
+        $this->chartType = $renderer;
+        return $renderer;
+    }
+
     /**
      * @return PlotArea
      */
@@ -133,7 +142,7 @@ class SvgChart
 
     public function toSvg(?array $customSvgTagAttributes = null): string
     {
-        $original = unserialize(serialize($this));;
+        $original = unserialize(serialize($this));
 
         $renderings = $this->renderPipeline->toSvg($this);
         $renderings .= $this->renderPipelineAnnotations->toSvg($this);

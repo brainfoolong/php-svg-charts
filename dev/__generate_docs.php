@@ -17,7 +17,8 @@ $files = [
     'column-chart-basic',
     'column-chart-stacked',
     'column-line-mixed-chart',
-    'column-line-mixed-chart-grouped-stacked'
+    'column-line-mixed-chart-grouped-stacked',
+    'pie-chart-basic',
 ];
 
 $ini = [
