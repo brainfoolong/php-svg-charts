@@ -81,6 +81,9 @@ class YAxis extends Renderer
         $plotArea = $this->availablePlotArea;
         $minMax = $this->series->getMinMaxCoordinates($this->id);
         $dataHeight = $minMax['maxY'] - $minMax['minY'];
+        if (count($dataPoints) === 1) {
+            $dataHeight = $this->availablePlotArea->getHeight();
+        }
         $arr = [];
         foreach ($dataPoints as $dataPoint) {
             $y = $dataPoint->y;

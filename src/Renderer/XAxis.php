@@ -103,6 +103,10 @@ class XAxis extends Renderer
                 break;
             }
         }
+        if (count($dataPoints) === 1) {
+            $key = key($dataPoints);
+            return [$key => $this->availablePlotArea->x1 + $this->availablePlotArea->getWidth() / 2];
+        }
         $totalWidth = $minMax['maxX'] - $minMax['minX'];
         $fixedOffset = 0;
         if ($hasColumns) {
