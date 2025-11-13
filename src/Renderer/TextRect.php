@@ -160,7 +160,7 @@ class TextRect extends Renderer
         }
 
         // debug helper
-//        $outputs[] = $chart->createDebugPoint($this->x, $this->y, debugInfo: $this->text);
+        //        $outputs[] = $chart->createDebugPoint($this->x, $this->y, debugInfo: $this->text);
         $group = new RenderGroup('textrect', $outputs);
         if ($this->rotate) {
             $group->transforms['rotate'] = $this->rotate . ', ' . $centerX . ', ' . $centerY;

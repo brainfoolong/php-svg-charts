@@ -10,9 +10,9 @@ class ColumnDataPoint
     public function __construct(
         public float $x,
         /**
-         * @var float|array|ColumnDataValue[]
+         * @var float|array|ColumnDataValue|ColumnDataValue[]
          */
-        public float|array $values,
+        public float|array|ColumnDataValue $values,
         public DrawSettings|null $drawSettings = null,
         public TextRect|null $dataPointLabelDrawSettings = null,
         public ?array $additionalAttributes = null,
@@ -25,6 +25,8 @@ class ColumnDataPoint
                 $this->values[$key] = new ColumnDataValue((float)$value);
             } elseif (is_array($value)) {
                 $this->values[$key] = new ColumnDataValue(...$value);
+            } elseif ($value instanceof ColumnDataValue) {
+                $this->values[$key] = $value;
             }
         }
     }

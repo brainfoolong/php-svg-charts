@@ -4,6 +4,7 @@ namespace BrainFooLong\SvgCharts\ChartsType;
 
 use BrainFooLong\SvgCharts\ColumnDataPoint;
 use BrainFooLong\SvgCharts\ColumnDataPointGrouped;
+use BrainFooLong\SvgCharts\DrawColor;
 use BrainFooLong\SvgCharts\DrawSettings;
 use BrainFooLong\SvgCharts\LabelFormats;
 use BrainFooLong\SvgCharts\LineDataPoint;
@@ -94,7 +95,7 @@ class LinesAndColumns extends Renderer
         $yAxis->series = $this;
         $hue = 120 * count($this->dataSeries);
         $lineDrawSettings = $lineDrawSettings ?? new DrawSettings(
-            stroke: 'hsl(' . $hue . ', 100%, 45%)',
+            stroke: new DrawColor(hsl: [$hue / 360, 1.0, 0.45]),
             strokeWidth: 2,
         );
         $this->dataSeries[$yAxis->id] = [
@@ -143,8 +144,10 @@ class LinesAndColumns extends Renderer
                 $dataPoints[$key] = $dataPoint;
                 $dataPointsFlat[] = $dataPoint;
             } elseif ($dataPoint instanceof ColumnDataPoint) {
+                $dataPoints[$key] = $dataPoint;
                 $dataPointsFlat[] = $dataPoint;
             } elseif (($dataPoint instanceof ColumnDataPointGrouped)) {
+                $dataPoints[$key] = $dataPoint;
                 $dataPointsFlat = array_merge($dataPointsFlat, $dataPoint->dataPoints);
             } else {
                 throw new Exception(
@@ -163,7 +166,7 @@ class LinesAndColumns extends Renderer
             'yBaseline' => $yBaseline,
             'columnWidth' => $columnWidth,
             'edgeRoundness' => $edgeRoundness,
-            'columnDrawSettings' => $drawSettings ?? new DrawSettings(fill: 'hsl(' . $hue . ', 100%, 45%)'),
+            'columnDrawSettings' => $drawSettings ?? new DrawSettings(fill: new DrawColor(hsl: [$hue / 360, 1.0, 0.45], hslModifyStep: [0, 0, 0.2])),
             'valueLabelDrawSettings' => $valueLabelDrawSettings,
             'summaryLabelDrawSettings' => $summaryLabelDrawSettings,
         ];
@@ -303,7 +306,7 @@ class LinesAndColumns extends Renderer
         $minMax = $this->getMinMaxCoordinates();
         $getYCoordinate = function (float $yValue) use ($minMax, $finalPlotArea) {
             $dataHeight = $minMax['maxY'] - $minMax['minY'];
-            $offset = (1 / $dataHeight) * ($yValue - $minMax['minY']);
+            $offset = $dataHeight > 0 ? (1 / $dataHeight) * ($yValue - $minMax['minY']) : 0;
             return $finalPlotArea->y2 - $offset * $finalPlotArea->getHeight();
         };
 
@@ -390,17 +393,6 @@ class LinesAndColumns extends Renderer
                     $totalSizePerColumn = $totalAvailableColumnWidth * $dataSeries['columnWidth'];
                     $x = $allXCoordinates[$dataPointId] - ($totalAvailableColumnWidth / 2) + ($totalSizePerColumn / 2);
 
-                    $columnFill = $dataSeries['columnDrawSettings']?->fill;
-                    $columnFillHue = null;
-                    $columnFillHslMatch = null;
-                    if ($columnFill && preg_match(
-                            "~(hsl\s*\(\s*)([0-9.]+)(.*?\))~",
-                            $columnFill,
-                            $columnFillHslMatch,
-                        )) {
-                        $columnFillHue = (float)$columnFillHslMatch[2];
-                    }
-
                     $lastYValue = null;
                     foreach ($columnDataPoints as $columnDataPoint) {
                         $values = $columnDataPoint->values;
@@ -416,6 +408,7 @@ class LinesAndColumns extends Renderer
                         $sum = 0;
                         $yDirection = 0;
                         $lastYCoordinate = null;
+                        $valueCount = 0;
                         foreach ($values as $value) {
                             $sum += $value->value;
                             $drawSettings = DrawSettings::merge(
@@ -423,9 +416,10 @@ class LinesAndColumns extends Renderer
                                 $columnDataPoint->drawSettings,
                                 $value->drawSettings,
                             );
-                            if ($value?->drawSettings?->fill === null && $columnFillHue !== null) {
-                                $drawSettings->fill = $columnFillHslMatch[1] . $columnFillHue . $columnFillHslMatch[3];
-                                $columnFillHue += 30;
+                            if ($valueCount) {
+                                for ($i = 0; $i < $valueCount; $i++) {
+                                    $drawSettings->fill?->applyHslModifyStep();
+                                }
                             }
                             $yValue = $yValueTotal + $value->value;
                             $yCoordinate = $getYCoordinate($yValue);
@@ -455,6 +449,7 @@ class LinesAndColumns extends Renderer
                             $lastYValue = $yValue;
                             $lastYCoordinate = $yCoordinate;
                             $yValueTotal += $value->value;
+                            $valueCount++;
                         }
                         if ($summaryLabelDrawSettings && $lastYValue !== null) {
                             $valueLabel = clone $summaryLabelDrawSettings;

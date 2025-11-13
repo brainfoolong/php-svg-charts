@@ -14,6 +14,9 @@ class DrawSettings
             }
             foreach ($new as $prop => $value) {
                 $newValue = (is_array($row) ? $row[$prop] ?? null : $row->{$prop} ?? null) ?? $value;
+                if ($newValue instanceof DrawColor) {
+                    $newValue = DrawColor::merge($new->{$prop}, $newValue);
+                }
                 $new->{$prop} = $newValue;
             }
         }
@@ -21,9 +24,9 @@ class DrawSettings
     }
 
     public function __construct(
-        public ?string $fill = null,
+        public string|DrawColor|null $fill = null,
         public ?float $fillOpacity = null,
-        public ?string $stroke = null,
+        public string|DrawColor|null $stroke = null,
         public ?float $strokeOpacity = null,
         public ?float $strokeWidth = null,
         public ?string $strokeDasharray = null,
@@ -53,7 +56,14 @@ class DrawSettings
          * @var string|null
          */
         public ?string $fontWeight = null,
-    ) {}
+    ) {
+        if (is_string($this->fill) && $this->fill) {
+            $this->fill = new DrawColor($this->fill);
+        }
+        if (is_string($this->stroke) && $this->stroke) {
+            $this->stroke = new DrawColor($this->stroke);
+        }
+    }
 
     public function toArray(): array
     {

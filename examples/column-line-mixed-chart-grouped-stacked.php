@@ -1,6 +1,7 @@
 <?php
 
 use BrainFooLong\SvgCharts\ColumnDataPointGrouped;
+use BrainFooLong\SvgCharts\DrawColor;
 use BrainFooLong\SvgCharts\DrawSettings;
 use BrainFooLong\SvgCharts\LabelFormats;
 use BrainFooLong\SvgCharts\Renderer\TextRect;
@@ -22,7 +23,12 @@ Examples::$code = function (): SvgChart {
         $yAxis,
         [
             new ColumnDataPointGrouped(
-                0, [['values' => [5, 30, 20]], ['values' => [5, 30, 20]], ['values' => [5, 30, 20]]]
+                0,
+                [
+                    ['values' => [5, 30, 20], 'drawSettings' => new DrawSettings(new DrawColor(hsl: [0.5, 1, 0.2]))],
+                    ['values' => [5, 30, 20], 'drawSettings' => new DrawSettings(new DrawColor(hsl: [0.6, 1, 0.2]))],
+                    ['values' => [5, 30, 20], 'drawSettings' => new DrawSettings(new DrawColor(hsl: [0.7, 1, 0.2]))],
+                ]
             ),
             new ColumnDataPointGrouped(
                 1, [['values' => [1, 20, 66]], ['values' => [1, 20, 66]], ['values' => [1, 20, 66]]]

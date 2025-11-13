@@ -87,12 +87,12 @@ class YAxis extends Renderer
         $arr = [];
         foreach ($dataPoints as $dataPoint) {
             $y = $dataPoint->y;
-            $offset = (1 / $dataHeight) * ($y - $minMax['minY']);
+            $offset = $dataHeight > 0 ? (1 / $dataHeight) * ($y - $minMax['minY']) : null;
             $arr[] = $plotArea->y2 - $offset * $plotArea->getHeight();
         }
         if ($additionalYValues) {
             foreach ($additionalYValues as $key => $y) {
-                $offset = (1 / $dataHeight) * ($y - $minMax['minY']);
+                $offset = $dataHeight > 0 ? (1 / $dataHeight) * ($y - $minMax['minY']) : 0;
                 $additionalYValues[$key] = $plotArea->y2 - $offset * $plotArea->getHeight();
             }
         }
@@ -132,7 +132,7 @@ class YAxis extends Renderer
         $plotArea = $this->availablePlotArea;
 
         $titleRectDefault = $this->titleDefaults ? clone $this->titleDefaults : new TextRect();
-        $titleRectDefault->rotate = 90;
+        $titleRectDefault->rotate = -90;
         $titleRectDefault->anchorHorizontal = $titleRectDefault::ANCHOR_HORIZONTAL_CENTER;
         $titleRectDefault->anchorVertical = $titleRectDefault::ANCHOR_VERTICAL_MIDDLE;
         $titleRectDefault->textAlignment = $titleRectDefault::TEXT_ALIGN_CENTER;

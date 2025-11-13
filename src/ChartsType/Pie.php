@@ -134,7 +134,7 @@ class Pie extends Renderer
                 }
 
                 if ($dataSeries['shadowIntensity'] > 0) {
-                    $path = new Renderer\Path($pathData, new DrawSettings('black', $dataSeries['shadowIntensity'], stroke: ''));
+                    $path = new Renderer\Path($pathData, new DrawSettings('black', $dataSeries['shadowIntensity'], stroke: '', strokeWidth: 0));
                     $path->additionalAttributes['transform'] = 'translate(4,4)';
                     $renderShadow->renderers[] = $path;
                 }

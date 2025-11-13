@@ -1,5 +1,8 @@
 <?php
 
+use BrainFooLong\SvgCharts\ColumnDataValue;
+use BrainFooLong\SvgCharts\DrawColor;
+use BrainFooLong\SvgCharts\DrawSettings;
 use BrainFooLong\SvgCharts\LabelFormats;
 use BrainFooLong\SvgCharts\Renderer\TextRect;
 use BrainFooLong\SvgCharts\Renderer\YAxis;
@@ -21,9 +24,13 @@ Examples::$code = function (): SvgChart {
     $chart->addColumnDataSeries(
         $yAxis2,
         [
-            ['x' => 1, 'values' => [5, 30, 20]],
-            ['x' => 2, 'values' => [1, 20, 66]],
-            ['x' => 3, 'values' => [80, 10, 33]],
+            [
+                'x' => 1,
+                'values' => [5, 30, 20],
+                'drawSettings' => new DrawSettings(fill: new DrawColor(hsl: [0.6, 1, 0.45], hslModifyStep: [0, 0, 0.1]))
+            ], // 3 bars with hsl colors and modified step to slighty alternate the color saturation
+            ['x' => 2, 'values' => new ColumnDataValue(25, drawSettings: new DrawSettings("green"))], // just one column but with specific draw settings
+            ['x' => 3, 'values' => 80], // just one plain bar
             ['x' => 4, 'values' => [90, 120, 5]],
             ['x' => 5, 'values' => [20, 6, 10]],
             ['x' => 6, 'values' => [-5, -30, -20]],
