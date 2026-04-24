@@ -72,10 +72,15 @@ class Pie extends Renderer
 
             /** @var PieDataPoint[] $dataPoints */
             $dataPoints = $dataSeries['dataPoints'];
-
-            $total = array_sum(array_map(function (PieDataPoint $data) {
-                return $data->value;
-            }, $dataPoints));
+            $total = 0.0;
+            $validDataPoints = 0;
+            foreach ($dataPoints as $dataPoint) {
+                if ($dataPoint->value <= 0) {
+                    continue;
+                }
+                $validDataPoints++;
+                $total += $dataPoint->value;
+            }
 
             if ($total <= 0.0) {
                 return '';
@@ -129,7 +134,7 @@ class Pie extends Renderer
                 $labelX = $adjustedCx + $radiusLabel * cos($midAngle);
                 $labelY = $adjustedCy + $radiusLabel * sin($midAngle);
 
-                if (count($dataSeries['dataPoints']) === 1) {
+                if ($validDataPoints === 1) {
                     $pathData = "M $cx,$cy m -$radius,0 a $radius,$radius 0 1,0 " . (2 * $radius) . ",0 a $radius,$radius 0 1,0 -" . (2 * $radius) . ',0 Z';
                 }
 

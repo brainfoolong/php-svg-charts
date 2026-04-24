@@ -21,6 +21,13 @@ $files = [
     'pie-chart-basic',
 ];
 
+foreach (scandir(__DIR__ . "/../examples/") as $file) {
+    if (!str_starts_with($file, "test-")) {
+        continue;
+    }
+    $files[] = substr($file, 0, -4);
+}
+
 $ini = [
     'highlight.bg' => '',
     'highlight.comment' => '#ff0050',
@@ -441,7 +448,10 @@ echo '<!DOCTYPE html>';
                 ];
             }
             ksort($examples, SORT_NUMERIC);
-            foreach ($examples as $example) {
+            foreach ($examples as $file => $example) {
+                if (!isset($_GET['showTests']) && str_starts_with($file, "test-")) {
+                    continue;
+                }
                 ?>
                 <div class="demo-box" data-file="<?= $file ?>">
                     <div class="demo-image" style="background-image:url('data:image/svg+xml;base64,<?= base64_encode($example['output']) ?>')">
