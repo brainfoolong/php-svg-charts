@@ -1,29 +1,24 @@
 name: PHP SVG Charts Tests
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
     
 jobs:
   tests:
-    runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        operating-system: ['ubuntu-latest']
-        php-versions: ['8.1', '8.2', '8.3', '8.4', '8.5']
-        phpunit-versions: ['latest']
-        include:
-          - operating-system: 'ubuntu-latest'
-            php-versions: '8.1'
+        phpversion: ["8.0", "8.1", "8.2", "8.3", "8.4", "8.5", "latest"]
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
 
       - name: Install php
-        uses: shivammathur/setup-php@v2
+        uses: https://github.com/shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: ${{ matrix.phpversion }}
           extensions: mbstring, gd, dom
           tools: composer
 
@@ -35,7 +30,7 @@ jobs:
 
       - name: Upload generated docs artifacts
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.php-versions }}_testresults
           path: ./tests/generated
