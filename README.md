@@ -1,3 +1,6 @@
+> **Note:** This is a mirror, please visit [the Codeberg Repo](https://codeberg.org/brainfoolong/php-svg-charts.git) for actual development. [Why Codeberg?](https://github.com/brainfoolong/brainfoolong/blob/main/WHYCODEBERG.md)
+
+
 
 # PHP SVG Charts (Beta)
 > Generate SVG image charts in PHP with ease.
