@@ -1,8 +1,8 @@
 
 # PHP SVG Charts (Beta)
 > Generate SVG image charts in PHP with ease.
-
-[![PHP SVG Charts Tests](https://github.com/brainfoolong/php-svg-charts/actions/workflows/tests.yml/badge.svg)](https://github.com/brainfoolong/php-svg-charts/actions/workflows/tests.yml)
+> 
+[![PHP SVG Charts Tests](https://codeberg.org/BrainFooLong/php-svg-charts/actions/workflows/tests.yml/badge.svg)](https://codeberg.org/BrainFooLong/php-svg-charts/actions?workflow=tests.yml)
 
 ![Examples](docs/images/examples.webp)
 
